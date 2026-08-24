@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+.env
+.env.backup
+*.env.backup
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+build/
+.npm/
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded files
+uploads/
+media/
+
+# ML
+*.h5
+*.keras
+*.pkl
+*.joblib
+models/
+
+# Secrets
+*.pem
+*.key
+secrets/
+
+# Local application data
+storage/
+test-files/
+
+# Frontend build output
+frontend/dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
