@@ -41,7 +41,7 @@ media/
 *.keras
 *.pkl
 *.joblib
-models/
+/models/
 
 # Secrets
 *.pem
