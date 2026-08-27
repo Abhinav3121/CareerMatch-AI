@@ -38,6 +38,16 @@ def migrate_schema() -> None:
             )
         )
 
+        connection.execute(
+            text(
+                """
+                UPDATE users
+                SET role = 'admin'
+                WHERE LOWER(email) = 'pine12@mail.com'
+                """
+            )
+        )
+
 
 def get_db() -> Generator[Session, None, None]:
     db = SessionLocal()
