@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import api from "../services/api";
+
 
 function Login() {
   const navigate = useNavigate();
@@ -13,12 +15,14 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+
   const handleChange = (event) => {
     setForm({
       ...form,
       [event.target.name]: event.target.value,
     });
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,11 +31,19 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await api.post("/auth/login", form);
+      const response = await api.post(
+        "/auth/login",
+        form
+      );
 
       localStorage.setItem(
         "careermatch_token",
         response.data.access_token
+      );
+
+      localStorage.setItem(
+        "careermatch_user",
+        JSON.stringify(response.data.user)
       );
 
       navigate("/dashboard");
@@ -45,14 +57,19 @@ function Login() {
     }
   };
 
+
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <div className="auth-title">CareerMatch AI</div>
+
+        <div className="auth-title">
+          CareerMatch AI
+        </div>
 
         <div className="auth-subtitle">
           Sign in to find jobs that match your skills.
         </div>
+
 
         {error && (
           <div className="alert alert-error">
@@ -60,7 +77,9 @@ function Login() {
           </div>
         )}
 
+
         <form onSubmit={handleSubmit}>
+
           <div className="form-group">
             <label>Email</label>
 
@@ -74,6 +93,7 @@ function Login() {
               required
             />
           </div>
+
 
           <div className="form-group">
             <label>Password</label>
@@ -89,22 +109,31 @@ function Login() {
             />
           </div>
 
+
           <button
             className="btn btn-primary"
             style={{ width: "100%" }}
             disabled={loading}
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading
+              ? "Signing in..."
+              : "Sign In"}
           </button>
+
         </form>
+
 
         <div className="auth-footer">
           Don't have an account?{" "}
-          <Link to="/register">Create one</Link>
+          <Link to="/register">
+            Create one
+          </Link>
         </div>
+
       </div>
     </div>
   );
 }
+
 
 export default Login;

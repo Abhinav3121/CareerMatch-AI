@@ -1,4 +1,9 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -7,25 +12,50 @@ import Resume from "./pages/Resume";
 import Jobs from "./pages/Jobs";
 import Recommendations from "./pages/Recommendations";
 import Matches from "./pages/Matches";
+import Applications from "./pages/Applications";
+import AdminApplications from "./pages/AdminApplications";
 
 import "./App.css";
 
+
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("careermatch_token");
+  const token = localStorage.getItem(
+    "careermatch_token"
+  );
 
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
   }
 
   return children;
 }
 
+
 function App() {
   return (
     <BrowserRouter>
+
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+
+        {/* Public routes */}
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+
+        {/* Dashboard */}
 
         <Route
           path="/"
@@ -36,6 +66,7 @@ function App() {
           }
         />
 
+
         <Route
           path="/dashboard"
           element={
@@ -44,6 +75,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+
+        {/* Resume */}
 
         <Route
           path="/resume"
@@ -54,6 +88,9 @@ function App() {
           }
         />
 
+
+        {/* Jobs */}
+
         <Route
           path="/jobs"
           element={
@@ -62,6 +99,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+
+        {/* Recommendations */}
 
         <Route
           path="/recommendations"
@@ -72,6 +112,9 @@ function App() {
           }
         />
 
+
+        {/* Match history */}
+
         <Route
           path="/matches"
           element={
@@ -81,10 +124,48 @@ function App() {
           }
         />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        {/* Client applications */}
+
+        <Route
+          path="/applications"
+          element={
+            <ProtectedRoute>
+              <Applications />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* Admin applications */}
+
+        <Route
+          path="/admin/applications"
+          element={
+            <ProtectedRoute>
+              <AdminApplications />
+            </ProtectedRoute>
+          }
+        />
+
+
+        {/* Fallback */}
+
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="/"
+              replace
+            />
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
+
 
 export default App;

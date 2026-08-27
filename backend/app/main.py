@@ -12,6 +12,7 @@ from app.models.user import User
 from app.models.resume import Resume
 from app.models.job import Job
 from app.models.match import JobMatch
+from app.models.application import Application
 
 from app.api.auth import router as auth_router
 from app.api.users import router as users_router
@@ -20,6 +21,7 @@ from app.api.jobs import router as jobs_router
 from app.api.dashboard import router as dashboard_router
 from app.api.recommendations import router as recommendations_router
 from app.api.matches import router as matches_router
+from app.api.applications import router as applications_router
 
 
 app = FastAPI(
@@ -117,4 +119,8 @@ app.include_router(
 
 app.include_router(
     matches_router
+)
+
+app.include_router(
+    applications_router
 )

@@ -22,6 +22,7 @@ def login(
     db: Session = Depends(get_db),
 ):
     """Authenticate a user and return a JWT access token."""
+
     user = (
         db.query(User)
         .filter(User.email == login_data.email)
@@ -43,4 +44,10 @@ def login(
     return {
         "access_token": access_token,
         "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+        },
     }

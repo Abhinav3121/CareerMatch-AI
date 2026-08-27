@@ -728,3 +728,63 @@ tbody tr:last-child td {
     font-size: 26px;
   }
 }
+
+/* ============================================================
+   APPLICATION CARD FIXES
+   ============================================================ */
+
+.job-title {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  line-height: 1.35;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.company {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 10px;
+  line-height: 1.4;
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.location {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.card {
+  overflow: visible;
+}
+
+.card .job-title + .company {
+  margin-top: 4px;
+}
+
+.card .company + .location {
+  margin-top: 4px;
+}
+
+.skill {
+  line-height: 1.4;
+}
+
+.skill.matched,
+.skill.missing {
+  line-height: 1.4;
+}
+
+.btn {
+  line-height: 1.3;
+  white-space: nowrap;
+}

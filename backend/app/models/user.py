@@ -58,3 +58,9 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+
+    applications = relationship(
+        "Application",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
