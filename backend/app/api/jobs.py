@@ -5,13 +5,14 @@ from fastapi import status
 
 from sqlalchemy.orm import Session
 
+from app.core.dependencies import get_current_admin
 from app.core.dependencies import get_current_user
 from app.database import get_db
 
 from app.models.job import Job
+from app.models.match import JobMatch
 from app.models.resume import Resume
 from app.models.user import User
-from app.models.match import JobMatch
 
 from app.schemas.job import JobCreate
 from app.schemas.job import JobMatchResponse
@@ -27,7 +28,7 @@ router = APIRouter(
 
 
 # ============================================================
-# CREATE JOB
+# CREATE JOB — ADMIN ONLY
 # ============================================================
 
 @router.post(
@@ -38,11 +39,10 @@ router = APIRouter(
 def create_job(
     job_data: JobCreate,
     current_user: User = Depends(
-        get_current_user
+        get_current_admin
     ),
     db: Session = Depends(get_db),
 ):
-
     job = Job(
         title=job_data.title,
         company=job_data.company,
@@ -62,7 +62,7 @@ def create_job(
 
 
 # ============================================================
-# LIST JOBS
+# LIST JOBS — CLIENT + ADMIN
 # ============================================================
 
 @router.get(
@@ -77,7 +77,6 @@ def list_jobs(
     ),
     db: Session = Depends(get_db),
 ):
-
     jobs = (
         db.query(Job)
         .order_by(Job.created_at.desc())
@@ -90,7 +89,7 @@ def list_jobs(
 
 
 # ============================================================
-# GET SINGLE JOB
+# GET SINGLE JOB — CLIENT + ADMIN
 # ============================================================
 
 @router.get(
@@ -104,7 +103,6 @@ def get_job(
     ),
     db: Session = Depends(get_db),
 ):
-
     job = (
         db.query(Job)
         .filter(Job.id == job_id)
@@ -121,7 +119,7 @@ def get_job(
 
 
 # ============================================================
-# MATCH JOB WITH RESUME
+# MATCH JOB WITH RESUME — CLIENT + ADMIN
 # ============================================================
 
 @router.post(
@@ -136,7 +134,6 @@ def match_job(
     ),
     db: Session = Depends(get_db),
 ):
-
     # --------------------------------------------------------
     # Find job
     # --------------------------------------------------------
@@ -179,7 +176,6 @@ def match_job(
     resume_skills = []
 
     if resume.analysis:
-
         resume_skills = resume.analysis.get(
             "skills",
             [],
@@ -203,19 +199,15 @@ def match_job(
     # --------------------------------------------------------
 
     if percentage >= 80:
-
         recommendation = "Strong match"
 
     elif percentage >= 60:
-
         recommendation = "Good match"
 
     elif percentage >= 40:
-
         recommendation = "Partial match"
 
     else:
-
         recommendation = "Low match"
 
     # --------------------------------------------------------
@@ -249,3 +241,79 @@ def match_job(
         "match_percentage": percentage,
         "recommendation": recommendation,
     }
+
+
+# ============================================================
+# UPDATE JOB — ADMIN ONLY
+# ============================================================
+
+@router.put(
+    "/{job_id}",
+    response_model=JobResponse,
+)
+def update_job(
+    job_id: int,
+    job_data: JobCreate,
+    current_user: User = Depends(
+        get_current_admin
+    ),
+    db: Session = Depends(get_db),
+):
+    job = (
+        db.query(Job)
+        .filter(Job.id == job_id)
+        .first()
+    )
+
+    if job is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job not found",
+        )
+
+    job.title = job_data.title
+    job.company = job_data.company
+    job.location = job_data.location
+    job.description = job_data.description
+    job.skills = job_data.skills
+    job.experience_min = job_data.experience_min
+    job.experience_max = job_data.experience_max
+    job.source_url = job_data.source_url
+
+    db.commit()
+    db.refresh(job)
+
+    return job
+
+
+# ============================================================
+# DELETE JOB — ADMIN ONLY
+# ============================================================
+
+@router.delete(
+    "/{job_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_job(
+    job_id: int,
+    current_user: User = Depends(
+        get_current_admin
+    ),
+    db: Session = Depends(get_db),
+):
+    job = (
+        db.query(Job)
+        .filter(Job.id == job_id)
+        .first()
+    )
+
+    if job is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Job not found",
+        )
+
+    db.delete(job)
+    db.commit()
+
+    return None

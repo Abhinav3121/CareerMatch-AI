@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.database import Base
 from app.database import engine
+from app.database import migrate_schema
 
 # Import every model explicitly.
 # This registers all SQLAlchemy models and relationships.
@@ -40,6 +41,8 @@ app.add_middleware(
 Base.metadata.create_all(
     bind=engine
 )
+
+migrate_schema()
 
 
 @app.get(
